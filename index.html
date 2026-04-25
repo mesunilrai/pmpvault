@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PMP Vault — ECO Revision Dashboard</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0f1117;
+      color: #e0e0e0;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      padding: 32px 16px 24px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      color: #ffffff;
+      letter-spacing: 1px;
+    }
+
+    header h1 span {
+      color: #4f8ef7;
+    }
+
+    header p {
+      color: #888;
+      margin-top: 6px;
+      font-size: 0.95rem;
+    }
+
+    .exam-info {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin: 20px 0 32px;
+    }
+
+    .badge {
+      background: #1e2130;
+      border: 1px solid #2e3250;
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: 0.85rem;
+      color: #aab;
+    }
+
+    .badge span { color: #4f8ef7; font-weight: 600; }
+
+    /* ECO Domain Cards */
+    .domains {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      max-width: 960px;
+      margin: 0 auto 32px;
+    }
+
+    .domain-card {
+      background: #1e2130;
+      border-radius: 12px;
+      padding: 20px;
+      border-left: 4px solid;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .domain-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.4);
+    }
+
+    .domain-card.people  { border-color: #4f8ef7; }
+    .domain-card.process { border-color: #34d399; }
+    .domain-card.biz     { border-color: #f59e0b; }
+
+    .domain-card .pct {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .domain-card.people  .pct { color: #4f8ef7; }
+    .domain-card.process .pct { color: #34d399; }
+    .domain-card.biz     .pct { color: #f59e0b; }
+
+    .domain-card h3 {
+      font-size: 1rem;
+      margin: 8px 0 4px;
+      color: #fff;
+    }
+
+    .domain-card p {
+      font-size: 0.82rem;
+      color: #888;
+      line-height: 1.5;
+    }
+
+    .domain-card .tasks {
+      margin-top: 10px;
+      font-size: 0.78rem;
+      color: #666;
+    }
+
+    /* Quick Links */
+    .section-title {
+      text-align: center;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #555;
+      margin-bottom: 14px;
+    }
+
+    .links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      max-width: 960px;
+      margin: 0 auto 40px;
+    }
+
+    .link-btn {
+      background: #1e2130;
+      border: 1px solid #2e3250;
+      border-radius: 10px;
+      padding: 14px 10px;
+      text-align: center;
+      text-decoration: none;
+      color: #ccc;
+      font-size: 0.88rem;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .link-btn:hover {
+      background: #2a2f4a;
+      color: #fff;
+    }
+
+    .link-btn .icon { font-size: 1.4rem; display: block; margin-bottom: 6px; }
+
+    /* Countdown */
+    .countdown {
+      text-align: center;
+      background: #1e2130;
+      border: 1px solid #2e3250;
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 400px;
+      margin: 0 auto 40px;
+    }
+
+    .countdown h2 { font-size: 0.8rem; color: #555; text-transform: uppercase; letter-spacing: 2px; }
+    .countdown .days { font-size: 3rem; font-weight: 700; color: #4f8ef7; line-height: 1.1; }
+    .countdown .label { font-size: 0.85rem; color: #666; }
+    .countdown .set-date { margin-top: 12px; font-size: 0.8rem; color: #444; }
+    .countdown .set-date a { color: #4f8ef7; text-decoration: none; }
+
+    footer {
+      text-align: center;
+      color: #333;
+      font-size: 0.78rem;
+      padding-bottom: 32px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>PMP <span>Vault</span></h1>
+    <p>ECO-Based Revision Dashboard · PMP Exam Prep 2024</p>
+  </header>
+
+  <div class="exam-info">
+    <div class="badge">Exam: <span>PMP</span></div>
+    <div class="badge">ECO Version: <span>Jan 2021 (Current)</span></div>
+    <div class="badge">Questions: <span>180</span></div>
+    <div class="badge">Duration: <span>230 min</span></div>
+    <div class="badge">Agile/Hybrid: <span>~50%</span></div>
+  </div>
+
+  <!-- Countdown -->
+  <div class="countdown">
+    <h2>🎯 Exam Countdown</h2>
+    <div class="days" id="days">--</div>
+    <div class="label">days to go</div>
+    <div class="set-date">Set your exam date in the code — edit <code>examDate</code> below</div>
+  </div>
+
+  <!-- ECO Domains -->
+  <p class="section-title">ECO Domains</p>
+  <div class="domains">
+
+    <a href="domain1.html" class="domain-card people">
+      <div class="pct">42%</div>
+      <h3>Domain 1 — People</h3>
+      <p>Leading and managing the project team with a focus on soft skills and stakeholder engagement.</p>
+      <div class="tasks">14 Tasks · Conflict · Leadership · Team Performance · Collaboration</div>
+    </a>
+
+    <a href="domain2.html" class="domain-card process">
+      <div class="pct">50%</div>
+      <h3>Domain 2 — Process</h3>
+      <p>Technical aspects of managing a project — scope, schedule, budget, risk, quality, and change.</p>
+      <div class="tasks">17 Tasks · Execution · Risk · Procurement · Change Management</div>
+    </a>
+
+    <a href="domain3.html" class="domain-card biz">
+      <div class="pct">8%</div>
+      <h3>Domain 3 — Business Environment</h3>
+      <p>Connecting projects to organizational strategy, compliance, and benefits realization.</p>
+      <div class="tasks">4 Tasks · Benefits · Compliance · Org Change · Value Delivery</div>
+    </a>
+
+  </div>
+
+  <!-- Quick Links -->
+  <p class="section-title">Study Tools</p>
+  <div class="links">
+    <a href="agile.html" class="link-btn"><span class="icon">🔄</span>Agile & Hybrid</a>
+    <a href="formulas.html" class="link-btn"><span class="icon">🧮</span>Formulas</a>
+    <a href="itto.html" class="link-btn"><span class="icon">📋</span>ITTOs</a>
+    <a href="flashcards.html" class="link-btn"><span class="icon">🃏</span>Flashcards</a>
+    <a href="mocktest.html" class="link-btn"><span class="icon">📝</span>Mock Tests</a>
+  </div>
+
+  <footer>pmpvault · built on GitHub + Vercel · ECO 2024</footer>
+
+  <script>
+    // Set your exam target date here: YYYY-MM-DD
+    const examDate = new Date('2025-12-31');
+    const today = new Date();
+    const diff = Math.ceil((examDate - today) / (1000 * 60 * 60 * 24));
+    document.getElementById('days').textContent = diff > 0 ? diff : '🎉';
+  </script>
+
+</body>
+</html>
