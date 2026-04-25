@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Domain 1: People — PMP Vault</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --card: #1e2130;
+    --border: #2e3250;
+    --blue: #4f8ef7;
+    --green: #34d399;
+    --amber: #f59e0b;
+    --red: #f87171;
+    --purple: #a78bfa;
+    --text: #e2e8f0;
+    --muted: #8892a4;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: linear-gradient(135deg, #1a1f35 0%, #0f1117 60%);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+  }
+
+  .header-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--blue);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border: 1px solid rgba(79,142,247,0.3);
+    border-radius: 6px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .back-btn:hover { background: rgba(79,142,247,0.1); border-color: var(--blue); }
+
+  .header-title {
+    flex: 1;
+    min-width: 0;
+  }
+  .header-title h1 {
+    font-size: clamp(16px, 3vw, 20px);
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+  }
+  .header-title p {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .domain-badge {
+    background: linear-gradient(135deg, rgba(79,142,247,0.2), rgba(167,139,250,0.2));
+    border: 1px solid rgba(79,142,247,0.4);
+    color: var(--blue);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  /* ── Main layout ── */
+  .main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 16px 60px;
+  }
+
+  /* ── Domain Overview ── */
+  .overview-card {
+    background: linear-gradient(135deg, rgba(79,142,247,0.08) 0%, rgba(52,211,153,0.05) 100%);
+    border: 1px solid rgba(79,142,247,0.25);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 28px;
+  }
+  .overview-card h2 {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--blue);
+    margin-bottom: 10px;
+  }
+  .overview-card p {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 14px;
+  }
+  .overview-stats {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .stat-pill {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    text-align: center;
+    min-width: 80px;
+  }
+  .stat-pill .val {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    display: block;
+  }
+  .stat-pill .lbl {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── Section heading ── */
+  .section-heading {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    margin-bottom: 14px;
+    margin-top: 32px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-heading::before {
+    content: '';
+    width: 3px;
+    height: 14px;
+    background: var(--blue);
+    border-radius: 2px;
+    display: inline-block;
+  }
+
+  /* ── Task Cards ── */
+  .task-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .task-card:hover { border-color: rgba(79,142,247,0.4); }
+
+  .task-header {
+    padding: 16px 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .task-num {
+    background: rgba(79,142,247,0.15);
+    border: 1px solid rgba(79,142,247,0.3);
+    color: var(--blue);
+    font-size: 11px;
+    font-weight: 700;
+    min-width: 32px;
+    height: 24px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    letter-spacing: 0.04em;
+  }
+
+  .task-title-wrap { flex: 1; min-width: 0; }
+  .task-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+  .task-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .task-toggle {
+    color: var(--muted);
+    font-size: 18px;
+    flex-shrink: 0;
+    transition: transform 0.25s;
+    margin-top: 2px;
+  }
+  .task-card.open .task-toggle { transform: rotate(180deg); }
+
+  /* ── Task Body ── */
+  .task-body {
+    display: none;
+    padding: 0 18px 18px;
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+  }
+  .task-card.open .task-body { display: block; }
+
+  /* ── Tags ── */
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .tag {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 9px;
+    border-radius: 12px;
+    border: 1px solid;
+  }
+  .tag-blue  { color: var(--blue);   background: rgba(79,142,247,0.1);  border-color: rgba(79,142,247,0.25); }
+  .tag-green { color: var(--green);  background: rgba(52,211,153,0.1);  border-color: rgba(52,211,153,0.25); }
+  .tag-amber { color: var(--amber);  background: rgba(245,158,11,0.1);  border-color: rgba(245,158,11,0.25); }
+  .tag-purple{ color: var(--purple); background: rgba(167,139,250,0.1); border-color: rgba(167,139,250,0.25);}
+
+  /* ── Concept chips ── */
+  .concepts-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .chip {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+
+  /* ── Approach table ── */
+  .approach-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  @media (max-width: 480px) {
+    .approach-grid { grid-template-columns: 1fr; }
+  }
+  .approach-col {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .approach-col h4 {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 6px;
+  }
+  .approach-col.pred h4 { color: var(--amber); }
+  .approach-col.agil h4 { color: var(--green); }
+  .approach-col.hybr h4 { color: var(--blue); }
+  .approach-col p  { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* ── Exam tip ── */
+  .exam-tip-inline {
+    background: rgba(245,158,11,0.08);
+    border: 1px solid rgba(245,158,11,0.25);
+    border-left: 3px solid var(--amber);
+    border-radius: 0 8px 8px 0;
+    padding: 10px 12px;
+    margin-top: 4px;
+  }
+  .exam-tip-inline .tip-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--amber);
+    margin-bottom: 4px;
+  }
+  .exam-tip-inline p {
+    font-size: 12px;
+    color: #d4b57a;
+    line-height: 1.5;
+  }
+
+  /* ── Global Exam Tips section ── */
+  .tips-card {
+    background: var(--card);
+    border: 1px solid rgba(245,158,11,0.3);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 8px;
+  }
+  .tips-card ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .tips-card li {
+    display: flex;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .tips-card li::before {
+    content: '→';
+    color: var(--amber);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .tips-card li strong { color: var(--text); }
+
+  /* ── Progress bar ── */
+  .progress-wrap {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .progress-wrap span { font-size: 12px; color: var(--muted); white-space: nowrap; }
+  .progress-bar-outer {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-bar-inner {
+    height: 100%;
+    width: 42%;
+    background: linear-gradient(90deg, var(--blue), var(--purple));
+    border-radius: 3px;
+    transition: width 1s ease;
+  }
+  .progress-pct { font-size: 13px; font-weight: 700; color: var(--blue); white-space: nowrap; }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header class="header">
+  <div class="header-inner">
+    <a class="back-btn" href="index.html">← Dashboard</a>
+    <div class="header-title">
+      <h1>Domain 1: People</h1>
+      <p>ECO Tasks 1–14 · Servant Leadership · Conflict · Teams</p>
+    </div>
+    <span class="domain-badge">42% of Exam</span>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- Overview -->
+  <div class="overview-card">
+    <h2>Domain Overview</h2>
+    <p>Domain 1 focuses on <strong>leading the project team</strong>. PMI expects you to act as a servant leader: removing obstacles, building psychological safety, resolving conflict, and enabling high performance across diverse and virtual teams.</p>
+    <div class="overview-stats">
+      <div class="stat-pill"><span class="val">42%</span><span class="lbl">Exam Weight</span></div>
+      <div class="stat-pill"><span class="val">14</span><span class="lbl">ECO Tasks</span></div>
+      <div class="stat-pill"><span class="val">~50</span><span class="lbl">Exam Qs</span></div>
+      <div class="stat-pill"><span class="val">#1</span><span class="lbl">Largest Domain</span></div>
+    </div>
+  </div>
+
+  <!-- Progress indicator -->
+  <div class="progress-wrap">
+    <span>Exam weight</span>
+    <div class="progress-bar-outer"><div class="progress-bar-inner"></div></div>
+    <span class="progress-pct">42%</span>
+  </div>
+
+  <!-- ── Tasks ── -->
+  <div class="section-heading">14 ECO Tasks</div>
+
+  <!-- T1 -->
+  <div class="task-card" id="t1">
+    <div class="task-header" onclick="toggle('t1')">
+      <div class="task-num">T1</div>
+      <div class="task-title-wrap">
+        <div class="task-title">Manage Conflict</div>
+        <div class="task-desc">Interpret the source and stage of conflict, apply techniques to resolve it.</div>
+      </div>
+      <div class="task-toggle">▾</div>
+    </div>
+    <div class="task-body">
+      <div class="tag-row">
+        <span class="tag tag-blue">Conflict Resolution</span>
+        <span class="tag tag-green">Team Dynamics</span>
+        <span class="tag tag-purple">Emotional Intelligence</span>
+      </div>
+      <div class="concepts-label">Key Concepts</div>
+      <div class="chip-row">
+        <span class="chip">Thomas-Kilmann Model</span>
+        <span class="chip">Collaborating / Problem-Solving</span>
+        <span class="chip">Compromising</span>
+        <span class="chip">Avoiding / Forcing</span>
+        <span class="chip">Smoothing / Accommodating</span>
+        <span class="chip">Conflict Stages</span>
+        <span class="chip">Active Listening</span>
+      </div>
+      <div class="approach-grid">
+        <div class="approach-col pred"><h4>Predictive</h4><p>PM mediates formally; documented resolution in team charter.</p></div>
+        <div class="approach-col agil"><h4>Agile</h4><p>Team self-resolves; Scrum Master removes impediments and facilitates retrospectives.</p></div>
+        <div class="approach-col hybr"><h4>Hybrid</h4><p>Team norms address self-resolution; PM escalates only when team cannot resolve.</p></div>
+      </div>
+      <div class="exam-tip-inline">
+        <div class="tip-label">🎯 Exam Tip</div>
+        <p>PMI's preferred conflict resolution is <strong>Collaborating / Problem-Solving</strong> — address the root cause, create win-win outcomes. <em>Forcing</em> is a last resort. If asked "what should you do first," choose collaboration before escalation.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- T2 -->
+  <div class="task-card" id="t2">
+    <div class="task-header" onclick="toggle('t2')">
+      <div class="task-num">T2</div>
+      <div class="task-title-wrap">
+        <div class="task-title">Lead a Team</div>
+        <div class="task-desc">Set a clear vision and mission; support diversity and inclusion; create a safe environment for innovation.</div>
+      </div>
+      <div class="task-toggle">▾</div>
+    </div>
+    <div class="task-body">
+      <div class="tag-row">
+        <span class="tag tag-blue">Servant Leadership</span>
+        <span class="tag tag-green">Situational Leadership</span>
+        <span class="tag tag-amber">Vision & Mission</span>
+      </div>
+      <div class="concepts-label">Key Concepts</div>
+      <div class="chip-row">
+        <span class="chip">Servant Leadership</span>
+        <span class="chip">Emotional Intelligence (EI)</span>
+        <span class="chip">Situational Leadership</span>
+        <span class="chip">Directing / Coaching / Supporting / Delegating</span>
+        <span class="chip">Psychological Safety</span>
+        <span class="chip">Diversity & Inclusion</span>
+        <span class="chip">Growth Mindset</span>
+      </div>
+      <div class="approach-grid">
+        <div class="approach-col pred"><h4>Predictive</h4><p>PM directs work per plan; authority flows from PMO hierarchy.</p></div>
+        <div class="approach-col agil"><h4>Agile</h4><p>Servant leader coaches self-organizing team; Product Owner owns vision.</p></div>
+        <div class="approach-col hybr"><h4>Hybrid</h4><p>Leader adapts style — more directive on fixed deliverables, servant-leader on agile work.</p></div>
+      </div>
+      <div class="exam-tip-inline">
+        <div class="tip-label">🎯 Exam Tip</div>
+        <p>PMI favors <strong>servant leadership</strong> heavily. Always think: "How do I empower the team?" not "How do I direct them?" Situational leadership — adjust style to the team member's competence and commitment level.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- T3 -->
+  <div class="task-card" id="t3">
+    <div class="task-header" onclick="toggle('t3')">
+      <div class="task-num">T3</div>
+      <div class="task-title-wrap">
+        <div class="task-title">Support Team Performance</div>
+        <div class="task-desc">Appraise performance, provide feedback, identify and address performance gaps.</div>
+      </div>
+      <div class="task-toggle">▾</div>
+    </div>
+    <div class="task-body">
+      <div class="tag-row">
+        <span class="tag tag-blue">Performance Management</span>
+        <span class="tag tag-green">Feedback</span>
+        <span class="tag tag-purple">Coaching</span>
+      </div>
+      <div class="concepts-label">Key Concepts</div>
+      <div class="chip-row">
+        <span class="chip">Tuckman's Stages (Forming → Performing)</span>
+        <span class="chip">Feedback Models (SBI, STAR)</span>
+        <span class="chip">Coaching vs Mentoring</span>
+        <span class="chip">Performance Reviews</span>
+        <span class="chip">Team Charter</span>
+        <span class="chip">Reward & Recognition</span>
+      </div>
+      <div class="approach-grid">
+        <div class="approach-col pred"><h4>Predictive</h4><p>Formal performance reviews; HR processes; PM documents issues.</p></div>
+        <div class="approach-col agil"><h4>Agile</h4><p>Retrospectives are the primary tool for continuous performance improvement.</p></div>
+        <div class="approach-col hybr"><h4>Hybrid</h4><p>Mix of sprint retros and formal mid-year reviews depending on org structure.</p></div>
+      </div>
+      <div class="exam-tip-inline">
+        <div class="tip-label">🎯 Exam Tip</div>
+        <p>When a team member is underperforming, PMI expects you to <strong>coach first</strong> — not discipline immediately. Understand the root cause before escalating to HR or removing them from the project.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- T4 -->
+  <div class="task-card" id="t4">
+    <div class="task-header" onclick="toggle('t4')">
+      <div class="task-num">T4</div>
+      <div class="task-title-wrap">
+        <div class="task-title">Empower Team Members and Stakeholders</div>
+        <div class="task-desc">Organize work around strengths; delegate, trust, and increase team autonomy.</div>
+      </div>
+      <div class="task-toggle">▾</div>
+    </div>
+    <div class="task-body">
+      <div class="tag-row">
+        <span class="tag tag-blue">Delegation</span>
+        <span class="tag tag-green">Autonomy</span>
+        <span class="tag tag-amber">Empowerment</span>
+      </div>
+      <div class="concepts-label">Key Concepts</div>
+      <div class="chip-row">
+        <span class="chip">Delegation Matrix</span>
+        <span class="chip">Accountability vs Responsibility</span>
+        <span class="chip">Trust Building</span>
+        <span class="chip">Decision Authority</span>
+        <span class="chip">Strengths-Based Assignments</span>
+        <span class="chip">RACI Chart</span>
+      </div>
+      <div class="approach-grid">
+        <div class="approach-col pred"><h4>Predictive</h4><p>PM delegates clearly defined tasks; authority documented in RACI.</p></div>
+        <div class="approach-col agil"><h4>Agile</h4><p>Team members self-select work from the backlog; SM protects team's decision-making.</p></div>
+        <div class="approach-col hybr"><h4>Hybrid</h4><p>Predictive deliverables assigned by PM; iterative work self-managed by team.</p></div>
+      </div>
+      <div class="exam-tip-inline">
+        <div class="tip-label">🎯 Exam Tip</div>
+        <p>PMI wants you to <strong>trust your team</strong>. Don't micromanage. Empower people with the information and authority they need. In agile contexts, teams are <em>self-organizing</em> — the PM/SM creates the environment, not the assignments.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- T5 -->
+  <div class="task-card" id="t5">
+    <div class="task-header" onclick="toggle('t5')">
+      <div class="task-num">T5</div>
+      <div class="task-title-wrap">
+        <div class="task-title">Ensure Team Members / Stakeholders Are Adequately Trained</div>
+        <div class="task-desc">Identify training needs and coordinate training opportunities for the team.</div>
+      </div>
+      <div class="task-toggle">▾</div>
+    </div>
+    <div class="task-body">
+      <div class="tag-row">
+        <span class="tag tag-blue">Training & Development</span>
+        <span class="tag tag-green">Skills Gap</span>
+        <span class="tag tag-purple">Learning Culture</span>
+      </div>
+      <div class="concepts-label">Key Concepts</div>
+      <div class="chip-row">
+        <span class="chip">Training Needs Analysis</span>
+        <span class="chip">On-the-Job Training</span>
+        <span class="chip">Mentoring / Coaching</span>
+        <span class="chip">Formal Training Plans</span>
+        <span class="chip">T-Shaped Skills</span>
+        <span class="chip">Continuous Learning</span>
+      </div>
+      <div class="approach-grid">
+        <div class="approach-col pred"><h4>Predictive</h4><p>Training plan created upfront; PM ensures skills match resource requirements.</p></div>
+        <div class="approach-col agil"><h4>Agile</h4><p>Team identifies skill gaps during retrospectives; learning is embedded in sprints.</p></div>
+        <div class="approach-col hybr"><h4>Hybrid</h4><p>Planned upfront training plus just-in-time learning sessions during iterations.</p></div>
+      </div>
+      <div class="exam-tip-inline">
+        <div class="tip-label">🎯 Exam Tip</div>
+        <p>If the team lacks a required skill, <strong>arrange training</strong> — don't replace the person or work around the gap. PMI values investing in people. Training is a PM responsibility, not just HR's.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- T6 -->
+  <div class="task-card" id="t6">
+    <div class="task-header" onclick="toggle('t6')">
+      <div class="task-num">T6</div>
+      <div class="task-title-wrap">
+        <div class="task-title">Build a Team</div>
+        <div class="task-desc">Appraise stakeholder skills; deduce team requirements; continuously evaluate and refresh team skills.</div>
+      </div>
+      <div class="task-toggle">▾</div>
+    </div>
+    <div class="task-body">
+      <div class="tag-row">
+        <span class="tag tag-blue">Team Building</span>
+        <span class="tag tag-green">Resource Planning</span>
+        <span class="tag tag-amber">Onboarding</span>
+      </div>
+      <div class="concepts-label">Key Concepts</div>
+      <div class="chip-row">
+        <span class="chip">Team Charter</span>
+        <span class="chip">Ground Rules</span>
+        <span class="chip">Tuckman's Model</span>
+        <span class="chip">Co-location vs Virtual Teams</span>
+        <span class="chip">Onboarding Process</span>
+        <span class="chip">Roles & Responsibilities</span>
+        <span class="chip">Resource Leveling</span>
+      </div>
+      <div class="approach-grid">
+        <div class="approach-col pred"><h4>Predictive</h4><p>Staffing Management Plan; resource histogram; formal team charter at kickoff.</p></div>
+        <div class="approach-col agil"><h4>Agile</h4><p>Small, stable, cross-functional teams; team establishes its own working agreements.</p></div>
+        <div class="approach-col hybr"><h4>Hybrid</h4><p>Core agile team for iterations; supplemented by specialists for predictive deliverables.</p></div>
+      </div>
+      <div class="exam-tip-inline">
+        <div class="tip-label">🎯 Exam Tip</div>
+        <p>Team charters and ground rules <strong>prevent conflict</strong>. Build them early and collaboratively — the team should own the rules, not have them imposed. Co-creating norms drives buy-in.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- T7 -->
+  <div class="task-card" id="t7">
+    <div class="task-header" onclick="toggle('t7')">
+      <div class="task-num">T7</div>
+      <div class="task-title-wrap">
+        <div class="task-title">Address and Remove Impediments, Obstacles, and Blockers</div>
+        <div class="task-desc">Determine critical impediments and facilitate removal to help the team perform effectively.</div>
+      </div>
+      <div class="task-toggle">▾</div>
+    </div>
+    <div class="task-body">
+      <div class="tag-row">
+        <span class="tag tag-blue">Impediment Removal</span>
+        <span class="tag tag-green">Problem Solving</span>
+        <span class="tag tag-purple">Servant Leadership</span>
+      </div>
+      <div class="concepts-label">Key Concepts</div>
+      <div class="chip-row">
+        <span class="chip">Impediment Log</span>
+        <span class="chip">Escalation Path</span>
+        <span class="chip">Root Cause Analysis</span>
+        <span class="chip">5 Whys</span>
+        <span class="chip">Risk Escalation</span>
+        <span class="chip">Daily Standup</span>
+        <span class="chip">Kanban Board</span>
+      </div>
+      <div class="approach-grid">
+        <div class="approach-col pred"><h4>Predictive</h4><p>Issue log maintained; PM escalates blockers per governance structure.</p></div>
+        <div class="approach-col agil"><h4>Agile</h4><p>Scrum Master's core duty is removing impediments; raised in daily standups and tracked on impediment board.</p></div>
+        <div class="approach-col hybr"><h4>Hybrid</h4><p>Daily standup surfaces blockers; PM/SM resolves those within team; management escalates externally.</p></div>
+      </div>
+      <div class="exam-tip-inline">
+        <div class="tip-label">🎯 Exam Tip</div>
+        <p><strong>Remove obstacles proactively</strong>. Don't wait for team members to escalate — create an environment where issues surface early. In agile, this is the Scrum Master's primary role. Address root causes, not just symptoms.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- T8 -->
+  <div class="task-card" id="t8">
+    <div class="task-header" onclick="toggle('t8')">
+      <div class="task-num">T8</div>
+      <div class="task-title-wrap">
+        <div class="task-title">Negotiate Project Agreements</div>
+        <div class="task-desc">Analyze the bounds of negotiations; prioritize interests; determine negotiation strategies.</div>
+      </div>
+      <div class="task-toggle">▾</div>
+    </div>
+    <div class="task-body">
+      <div class="tag-row">
+        <span class="tag tag-blue">Negotiation</span>
+        <span class="tag tag-amber">Contracts</span>
+        <span class="tag tag-green">Stakeholder Management</span>
+      </div>
+      <div class="concepts-label">Key Concepts</div>
+      <div class="chip-row">
+        <span class="chip">BATNA (Best Alternative to Negotiated Agreement)</span>
+        <span class="chip">Principled Negotiation</span>
+        <span class="chip">Win-Win Outcomes</span>
+        <span class="chip">Contract Types (FFP, T&M, CPFF)</span>
+        <span class="chip">Scope Negotiation</span>
+        <span class="chip">Resource Negotiation</span>
+      </div>
+      <div class="approach-grid">
+        <div class="approach-col pred"><h4>Predictive</h4><p>Formal procurement; legal review of contracts; change control for modifications.</p></div>
+        <div class="approach-col agil"><h4>Agile</h4><p>Agile contracts favor T&M or outcome-based; team negotiates sprint commitments.</p></div>
+        <div class="approach-col hybr"><h4>Hybrid</h4><p>Fixed contract for regulatory work; flexible agreements for iterative components.</p></div>
+      </div>
+      <div class="exam-tip-inline">
+        <div class="tip-label">🎯 Exam Tip</div>
+        <p>PMI prefers <strong>win-win (integrative) negotiation</strong> over zero-sum (distributive). Understand the other party's interests, not just positions. Know your BATNA — it's your walk-away power.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- T9 -->
+  <div class="task-card" id="t9">
+    <div class="task-header" onclick="toggle('t9')">
+      <div class="task-num">T9</div>
+      <div class="task-title-wrap">
+        <div class="task-title">Collaborate with Stakeholders</div>
+        <div class="task-desc">Evaluate engagement needs; optimize alignment; build trust through transparent communication.</div>
+      </div>
+      <div class="task-toggle">▾</div>
+    </div>
+    <div class="task-body">
+      <div class="tag-row">
+        <span class="tag tag-blue">Stakeholder Engagement</span>
+        <span class="tag tag-green">Communication</span>
+        <span class="tag tag-purple">Relationship Building</span>
+      </div>
+      <div class="concepts-label">Key Concepts</div>
+      <div class="chip-row">
+        <span class="chip">Stakeholder Register</span>
+        <span class="chip">Power/Interest Grid</span>
+        <span class="chip">Engagement Continuum (Unaware → Leading)</span>
+        <span class="chip">Communication Plan</span>
+        <span class="chip">Active Engagement</span>
+        <span class="chip">Feedback Loops</span>
+      </div>
+      <div class="approach-grid">
+        <div class="approach-col pred"><h4>Predictive</h4><p>Stakeholder management plan; formal status reports; scheduled review meetings.</p></div>
+        <div class="approach-col agil"><h4>Agile</h4><p>Product Owner represents stakeholders; sprint reviews invite direct stakeholder feedback.</p></div>
+        <div class="approach-col hybr"><h4>Hybrid</h4><p>Core stakeholders attend sprint reviews; broader stakeholder updates via formal reporting.</p></div>
+      </div>
+      <div class="exam-tip-inline">
+        <div class="tip-label">🎯 Exam Tip</div>
+        <p>Move stakeholders toward <strong>"Leading"</strong> on the engagement scale. Unaware or resistant stakeholders are a project risk. Engagement is ongoing — not just at project start. Bring them into the process, not just inform them.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- T10 -->
+  <div class="task-card" id="t10">
+    <div class="task-header" onclick="toggle('t10')">
+      <div class="task-num">T10</div>
+      <div class="task-title-wrap">
+        <div class="task-title">Build Shared Understanding</div>
+        <div class="task-desc">Break down silos; ensure alignment by clarifying needs, expectations, and business value.</div>
+      </div>
+      <div class="task-toggle">▾</div>
+    </div>
+    <div class="task-body">
+      <div class="tag-row">
+        <span class="tag tag-blue">Alignment</span>
+        <span class="tag tag-green">Communication</span>
+        <span class="tag tag-amber">Vision</span>
+      </div>
+      <div class="concepts-label">Key Concepts</div>
+      <div class="chip-row">
+        <span class="chip">Shared Vision</span>
+        <span class="chip">Project Charter</span>
+        <span class="chip">Kickoff Meeting</span>
+        <span class="chip">Definition of Done (DoD)</span>
+        <span class="chip">Ubiquitous Language</span>
+        <span class="chip">Cross-functional Communication</span>
+        <span class="chip">Transparency</span>
+      </div>
+      <div class="approach-grid">
+        <div class="approach-col pred"><h4>Predictive</h4><p>Scope statement, WBS, and kickoff meeting create shared understanding of deliverables.</p></div>
+        <div class="approach-col agil"><h4>Agile</h4><p>Product vision, definition of done, and story mapping ensure team/stakeholder alignment.</p></div>
+        <div class="approach-col hybr"><h4>Hybrid</h4><p>Charter for overall vision; DoD and acceptance criteria for iterative deliverables.</p></div>
+      </div>
+      <div class="exam-tip-inline">
+        <div class="tip-label">🎯 Exam Tip</div>
+        <p>Misalignment is a leading cause of project failure. PMI expects you to <strong>invest time in building shared understanding</strong> — not assume alignment exists. Use visual tools (story maps, prototypes, WBS) to create a common picture.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- T11 -->
+  <div class="task-card" id="t11">
+    <div class="task-header" onclick="toggle('t11')">
+      <div class="task-num">T11</div>
+      <div class="task-title-wrap">
+        <div class="task-title">Engage and Support Virtual Teams</div>
+        <div class="task-desc">Examine virtual team needs; investigate tools; promote trust and engagement in distributed settings.</div>
+      </div>
+      <div class="task-toggle">▾</div>
+    </div>
+    <div class="task-body">
+      <div class="tag-row">
+        <span class="tag tag-blue">Virtual Teams</span>
+        <span class="tag tag-green">Remote Collaboration</span>
+        <span class="tag tag-purple">Cultural Intelligence</span>
+      </div>
+      <div class="concepts-label">Key Concepts</div>
+      <div class="chip-row">
+        <span class="chip">Collaboration Tools (Slack, Jira, Zoom)</span>
+        <span class="chip">Time Zone Management</span>
+        <span class="chip">Cultural Awareness</span>
+        <span class="chip">Communication Bandwidth</span>
+        <span class="chip">Virtual Team Norms</span>
+        <span class="chip">Trust in Remote Settings</span>
+        <span class="chip">Osmotic Communication</span>
+      </div>
+      <div class="approach-grid">
+        <div class="approach-col pred"><h4>Predictive</h4><p>Communication plan specifies channels, frequency, and escalation for virtual members.</p></div>
+        <div class="approach-col agil"><h4>Agile</h4><p>Osmotic communication replaced with daily video standups; digital Kanban boards; async retrospectives.</p></div>
+        <div class="approach-col hybr"><h4>Hybrid</h4><p>Blend synchronous and async communications; co-located core team with remote extended team.</p></div>
+      </div>
+      <div class="exam-tip-inline">
+        <div class="tip-label">🎯 Exam Tip</div>
+        <p>Virtual teams need <strong>extra intentional communication</strong>. Informal connections don't happen naturally — build in social time, virtual coffee chats, and explicit recognition. Trust is built through consistent follow-through, not physical proximity.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- T12 -->
+  <div class="task-card" id="t12">
+    <div class="task-header" onclick="toggle('t12')">
+      <div class="task-num">T12</div>
+      <div class="task-title-wrap">
+        <div class="task-title">Define Team Ground Rules</div>
+        <div class="task-desc">Communicate organizational principles; establish ground rules for working agreements.</div>
+      </div>
+      <div class="task-toggle">▾</div>
+    </div>
+    <div class="task-body">
+      <div class="tag-row">
+        <span class="tag tag-blue">Working Agreements</span>
+        <span class="tag tag-green">Team Norms</span>
+        <span class="tag tag-amber">Code of Conduct</span>
+      </div>
+      <div class="concepts-label">Key Concepts</div>
+      <div class="chip-row">
+        <span class="chip">Team Charter</span>
+        <span class="chip">Working Agreements</span>
+        <span class="chip">Code of Ethics</span>
+        <span class="chip">PMI Code of Ethics & Professional Conduct</span>
+        <span class="chip">Accountability Norms</span>
+        <span class="chip">Meeting Protocols</span>
+      </div>
+      <div class="approach-grid">
+        <div class="approach-col pred"><h4>Predictive</h4><p>Team charter signed at kickoff; ground rules documented in project management plan.</p></div>
+        <div class="approach-col agil"><h4>Agile</h4><p>Working agreements created collaboratively at team formation; revisited each retrospective.</p></div>
+        <div class="approach-col hybr"><h4>Hybrid</h4><p>Formal charter for organizational norms; working agreements for agile cadence and behaviors.</p></div>
+      </div>
+      <div class="exam-tip-inline">
+        <div class="tip-label">🎯 Exam Tip</div>
+        <p>Ground rules must be <strong>co-created by the team, not imposed</strong>. Shared ownership drives compliance. They should cover communication, decision-making, conflict resolution, and meeting behavior. Revisit them regularly.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- T13 -->
+  <div class="task-card" id="t13">
+    <div class="task-header" onclick="toggle('t13')">
+      <div class="task-num">T13</div>
+      <div class="task-title-wrap">
+        <div class="task-title">Mentor Relevant Stakeholders</div>
+        <div class="task-desc">Allocate time to mentoring; recognize and act on mentoring opportunities.</div>
+      </div>
+      <div class="task-toggle">▾</div>
+    </div>
+    <div class="task-body">
+      <div class="tag-row">
+        <span class="tag tag-blue">Mentoring</span>
+        <span class="tag tag-green">Knowledge Transfer</span>
+        <span class="tag tag-purple">Leadership Development</span>
+      </div>
+      <div class="concepts-label">Key Concepts</div>
+      <div class="chip-row">
+        <span class="chip">Coaching vs Mentoring (difference)</span>
+        <span class="chip">Knowledge Transfer</span>
+        <span class="chip">Succession Planning</span>
+        <span class="chip">Leadership Pipeline</span>
+        <span class="chip">Informal Mentoring</span>
+        <span class="chip">Reverse Mentoring</span>
+      </div>
+      <div class="approach-grid">
+        <div class="approach-col pred"><h4>Predictive</h4><p>PM formally mentors junior PMs; knowledge transfer planned at project close.</p></div>
+        <div class="approach-col agil"><h4>Agile</h4><p>Senior developers pair-program with juniors; Scrum Master coaches team on agile practices.</p></div>
+        <div class="approach-col hybr"><h4>Hybrid</h4><p>Formal mentoring for predictive skills; agile coaches embedded in iterations.</p></div>
+      </div>
+      <div class="exam-tip-inline">
+        <div class="tip-label">🎯 Exam Tip</div>
+        <p><strong>Mentoring ≠ Coaching</strong>: Mentoring = sharing your experience and expertise; Coaching = asking questions to help someone discover their own solutions. PMI expects PMs to do both. Don't confuse them on exam questions.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- T14 -->
+  <div class="task-card" id="t14">
+    <div class="task-header" onclick="toggle('t14')">
+      <div class="task-num">T14</div>
+      <div class="task-title-wrap">
+        <div class="task-title">Promote Team Performance Through Application of Emotional Intelligence</div>
+        <div class="task-desc">Assess team member's emotional state; use EI to adapt communication and foster collaboration.</div>
+      </div>
+      <div class="task-toggle">▾</div>
+    </div>
+    <div class="task-body">
+      <div class="tag-row">
+        <span class="tag tag-blue">Emotional Intelligence</span>
+        <span class="tag tag-green">Empathy</span>
+        <span class="tag tag-purple">Self-Awareness</span>
+      </div>
+      <div class="concepts-label">Key Concepts</div>
+      <div class="chip-row">
+        <span class="chip">Goleman's 5 EI Components</span>
+        <span class="chip">Self-Awareness</span>
+        <span class="chip">Self-Regulation</span>
+        <span class="chip">Motivation</span>
+        <span class="chip">Empathy</span>
+        <span class="chip">Social Skills</span>
+        <span class="chip">Psychological Safety</span>
+        <span class="chip">Reading the Room</span>
+      </div>
+      <div class="approach-grid">
+        <div class="approach-col pred"><h4>Predictive</h4><p>PM uses EI during status meetings, performance reviews, and conflict situations.</p></div>
+        <div class="approach-col agil"><h4>Agile</h4><p>Retrospective mood boards, health checks, and team sentiment tracking. SM gauges team energy.</p></div>
+        <div class="approach-col hybr"><h4>Hybrid</h4><p>EI applied continuously; formal check-ins plus agile ceremonies surface team morale.</p></div>
+      </div>
+      <div class="exam-tip-inline">
+        <div class="tip-label">🎯 Exam Tip</div>
+        <p>EI is tested throughout the exam — not just in "soft skills" questions. When a team member seems disengaged or a stakeholder is hostile, apply EI first: <strong>acknowledge feelings, understand the root cause, then act</strong>. Don't jump straight to solutions.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Global Exam Tips ── -->
+  <div class="section-heading">PMI Mindset — What the Exam Expects</div>
+
+  <div class="tips-card">
+    <ul>
+      <li><strong>Servant Leadership always wins.</strong> PMI wants you removing obstacles and empowering your team, not commanding and controlling.</li>
+      <li><strong>Resolve conflict collaboratively.</strong> Problem-solving (win-win) is the preferred approach. Forcing is almost always wrong on the exam.</li>
+      <li><strong>Self-organizing teams.</strong> In agile questions, teams decide their own work. Don't assign tasks for them — create the environment.</li>
+      <li><strong>Coach before disciplining.</strong> If someone is underperforming, the first step is always a coaching conversation, not HR escalation.</li>
+      <li><strong>Engage stakeholders continuously.</strong> Stakeholder management isn't a one-time activity — it's ongoing throughout the project.</li>
+      <li><strong>EI over authority.</strong> When in doubt between an emotional/relational response and an authority/formal response, choose EI.</li>
+      <li><strong>Virtual teams need intentional connection.</strong> Don't assume remote teams will build trust naturally — the PM must create it deliberately.</li>
+      <li><strong>Ground rules are co-created.</strong> Never impose team norms — build them collaboratively so the team owns them.</li>
+      <li><strong>Hybrid = context matters.</strong> For hybrid questions, think: What approach fits this specific situation? Predictive for stable, agile for uncertain.</li>
+      <li><strong>Domain 1 = 42% of exam.</strong> Most situational "what would you do?" questions live here. If a question involves people, teams, or leadership — think servant leadership first.</li>
+    </ul>
+  </div>
+
+</main>
+
+<script>
+  function toggle(id) {
+    const card = document.getElementById(id);
+    card.classList.toggle('open');
+  }
+</script>
+</body>
+</html>
